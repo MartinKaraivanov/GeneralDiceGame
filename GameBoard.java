@@ -12,15 +12,21 @@ import javax.swing.SwingConstants;
  * Game board.
  */
 public class GameBoard extends JFrame {
-    private static Dice[] dices = new Dice[5];
+    private static Dice[] dices;
     private static Player player = new Player("");
 
     /**
-     * Function.
+     * Constr.
      */
     public GameBoard() {
-        String username = JOptionPane.showInputDialog("Enter name");
-        player.setUsername(username);
+        dices = new Dice[5];
+        player = new Player(JOptionPane.showInputDialog("Enter name"));
+    }
+
+    /**
+     * Run.
+     */
+    public void run() {
         
         JFrame frame = new JFrame("Main Menu");
         frame.setSize(550, 550);

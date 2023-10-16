@@ -19,10 +19,6 @@ public class Player {
         return username;
     }
 
-    public void setUsername(String name) {
-        username = name;
-    }
-
     public int getTotalScore() {
         return totalScore;
     }
