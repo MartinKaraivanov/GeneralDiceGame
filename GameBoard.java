@@ -74,26 +74,29 @@ public class GameBoard extends JFrame {
         });
         
         JLabel remainingRollsLabel = 
-            new JLabel("You have " + rolls.getRemainingRolls() + "  remaining rolls");
+            new JLabel("You have " + rolls.getRemainingRolls() + " remaining rolls");
         remainingRollsLabel.setBounds(221, 134, 270, 44);
         remainingRollsLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         remainingRollsLabel.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(remainingRollsLabel);
 
         JLabel totalLabel = new JLabel();
-        totalLabel.setText(String.format("Total score: %2d", player.getTotalScore()));
+        totalLabel.setText("Total score: " + player.getTotalScore());
         totalLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         totalLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         totalLabel.setBounds(0, 420, 200, 14);
         panel.add(totalLabel);
 
         JLabel gameOver = new JLabel();
-        gameOver.setText(
-            String.format("Game Over! Your total score is: %2d", player.getTotalScore())
-        );
         gameOver.setBounds(81, 445, 439, 40);
         gameOver.setVisible(false);
         panel.add(gameOver);
+
+        JButton rollDices = new JButton("Roll");
+        rollDices.setBounds(277, 174, 158, 44);
+        rollDices.setHorizontalAlignment(JTextField.CENTER);
+        rollDices.setFocusPainted(false);
+        panel.add(rollDices);
 
         JButton[] diceButtons = new JButton[5];
         for (int i = 0; i < 5; i++) {
@@ -103,7 +106,17 @@ public class GameBoard extends JFrame {
             diceButtons[i].setFocusPainted(false);
             diceButtons[i].setBounds(221 + i * 56, 77, 46, 46);
             panel.add(diceButtons[i]);
-            //diceButtons[i].addActionListener();
+            
+            final int currentDice = i;
+
+            diceButtons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    diceButtons[currentDice].setEnabled(false);
+                    diceButtons[currentDice].setText(null);
+                    rollDices.setEnabled(true);
+                }
+            });
         }
 
         JButton[] combinationButtons = new JButton[15];
@@ -120,7 +133,50 @@ public class GameBoard extends JFrame {
             combinationButtons[i].setFocusPainted(false);
             combinationButtons[i].setEnabled(false);
             panel.add(combinationButtons[i]);
-            //combinationButtons[i].addActionListener();
+
+            final int currentCombination = i;
+
+            combinationButtons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    combinationsSelected.useCombination(currentCombination);
+                    
+                    rolls.resetRolls();
+                    
+                    remainingRollsLabel.setText(
+                        "You have " + rolls.getRemainingRolls() + " remaining rolls"
+                    );
+                    
+                    player.updateScore(
+                        Integer.parseInt(combinationButtons[currentCombination].getText())
+                    );
+                    
+                    totalLabel.setText("Total score: " + player.getTotalScore());
+                    
+                    for (int j = 0; j < 5; j++) {
+                        diceButtons[j].setText(null);
+                        diceButtons[j].setEnabled(false);
+                        diceButtons[j].setFocusPainted(false);
+                    }
+
+                    rollDices.setEnabled(true);
+
+                    for (int j = 0; j < 15; j++) {
+                        combinationButtons[j].setEnabled(false);
+                        if (!combinationsSelected.isCombinationUsed(j)) {
+                            combinationButtons[j].setText(null);
+                        }
+                    }
+
+                    if (combinationsSelected.getNumberOfUsed() == 15) {
+                        gameOver.setText(
+                            ("Game Over! Your total score is: " + player.getTotalScore())
+                        );
+                        gameOver.setVisible(true);
+                        rollDices.setEnabled(false);
+                    }
+                }
+            });
             
             combinationLabels[i] = new JLabel();
             combinationLabels[i].setText(combinationNames[i]);
@@ -129,12 +185,6 @@ public class GameBoard extends JFrame {
             combinationLabels[i].setBounds(0, 80 + i * 20, 116, 14);
             panel.add(combinationLabels[i]);
         }
-
-        JButton rollDices = new JButton("Roll");
-        rollDices.setBounds(277, 174, 158, 44);
-        rollDices.setHorizontalAlignment(JTextField.CENTER);
-        rollDices.setFocusPainted(false);
-        panel.add(rollDices);
 
         rollDices.addActionListener(new ActionListener() {
             @Override
@@ -157,10 +207,9 @@ public class GameBoard extends JFrame {
 
                 rollDices.setEnabled(false);
                 remainingRollsLabel.setText(
-                    "You have " + rolls.getRemainingRolls() + "  remaining rolls"
+                    "You have " + rolls.getRemainingRolls() + " remaining rolls"
                 );
                 
-
                 int[] whatNumbers = new int[5];
 
                 for (int i = 0; i < 5; i++) {
