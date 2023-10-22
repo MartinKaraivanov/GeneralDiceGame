@@ -4,19 +4,13 @@ package GeneralDiceGame;
  * Player class.
  */
 public class Player {
-    private String username;
     private int totalScore;
 
     /**
      * Constructor.
      */
-    public Player(String username) {
-        this.username = username;
+    public Player() {
         this.totalScore = 0;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public int getTotalScore() {

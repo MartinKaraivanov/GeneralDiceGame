@@ -6,7 +6,6 @@ import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -25,7 +24,7 @@ public class GameBoard extends JFrame {
      */
     public GameBoard() {
         dices = new Dice[5];
-        player = new Player(JOptionPane.showInputDialog("Enter name"));
+        player = new Player();
         rolls = new DiceRolling();
         combinationsSelected = new CombinationsUse();
 
@@ -52,27 +51,7 @@ public class GameBoard extends JFrame {
         JLabel title = new JLabel("General Dice Game", SwingConstants.CENTER);
         title.setBounds(10, 10, 500, 50);
         panel.add(title); 
-        
-        JButton newGame = new JButton("New Game");
-        newGame.setBounds(277, 262, 158, 67);
-        newGame.setHorizontalAlignment(JTextField.CENTER);
-        newGame.setFocusPainted(false);
-        panel.add(newGame);
-        //newGame.addActionListener();
-        
-        JButton exit = new JButton("Exit");
-        exit.setBounds(277, 367, 158, 67);
-        exit.setHorizontalAlignment(SwingConstants.CENTER);
-        exit.setFocusPainted(false);
-        panel.add(exit);
-        
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        
+
         JLabel remainingRollsLabel = 
             new JLabel("You have " + rolls.getRemainingRolls() + " remaining rolls");
         remainingRollsLabel.setBounds(221, 134, 270, 44);
@@ -357,6 +336,53 @@ public class GameBoard extends JFrame {
                         combinationButtons[14].setText(Integer.toString(whatNumbers[0] * 5 + 50));
                     }
                 }
+            }
+        });
+
+        JButton exit = new JButton("Exit");
+        exit.setBounds(277, 367, 158, 67);
+        exit.setHorizontalAlignment(SwingConstants.CENTER);
+        exit.setFocusPainted(false);
+        panel.add(exit);
+        
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        JButton newGame = new JButton("New Game");
+        newGame.setBounds(277, 262, 158, 67);
+        newGame.setHorizontalAlignment(JTextField.CENTER);
+        newGame.setFocusPainted(false);
+        panel.add(newGame);
+        
+        newGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rolls.resetRolls();
+                remainingRollsLabel.setText(
+                    "You have " + rolls.getRemainingRolls() + " remaining rolls"
+                );
+                
+                player.updateScore(-player.getTotalScore());
+                totalLabel.setText("Total score: " + player.getTotalScore());
+                
+                for (int i = 0; i < 5; i++) {
+                    diceButtons[i].setText(null);
+                    diceButtons[i].setEnabled(false);
+                    diceButtons[i].setFocusPainted(false);
+                }
+                rollDices.setEnabled(true);
+
+                for (int i = 0; i < 15; i++) {
+                    combinationButtons[i].setText(null);
+                    combinationButtons[i].setEnabled(false);
+                }
+                combinationsSelected.resetCombinations();
+
+                gameOver.setVisible(false);
             }
         });
     }

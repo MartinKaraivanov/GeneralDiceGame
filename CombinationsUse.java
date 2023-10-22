@@ -28,10 +28,21 @@ public class CombinationsUse {
     }
 
     /**
-     * Func.
+     * Use function.
+     * @param combination - which combination.
      */
     public void useCombination(int combination) {
         combinationUsed[combination] = true;
         numberOfUsedComb++;
+    }
+
+    /**
+     * Reset function.
+     */
+    public void resetCombinations() {
+        numberOfUsedComb = 15;
+        for (int i = 0; i < 15; i++) {
+            combinationUsed[i] = false;
+        }
     }
 }
