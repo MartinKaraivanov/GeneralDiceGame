@@ -34,118 +34,12 @@ public class GameBoard extends JFrame {
     private static Dice[] dices;
     private static Player player;
     private static DiceRolling rolls;
-    private static CombinationsUse combinationsSelected;
-    private static String playerName;
-
-    public void savePlayerScore(String playerName, int score) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("leaderboard.txt", true))) {
-            writer.write(playerName + "," + score);
-            writer.newLine();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-
-    public void displayLeaderboard() {
-        JFrame leaderboardFrame = new JFrame("Leaderboard");
-        leaderboardFrame.setSize(400, 300);
-        leaderboardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        JPanel leaderboardPanel = new JPanel();
-        leaderboardFrame.getContentPane().add(leaderboardPanel);
-
-       
-        // Create a table to display the leaderboard
-        JTable leaderboardTable = new JTable() {
-            @Override
-    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-                Component component = super.prepareRenderer(renderer, row, column);
-
-                // Customize the font and foreground color
-                component.setFont(new Font("Arial", Font.PLAIN, 14));
-                component.setForeground(Color.BLACK);
-
-                
-                if (row == 0) {
-                    component.setBackground(Color.YELLOW);
-                } else if (row == 1) {
-                    component.setBackground(Color.LIGHT_GRAY);
-                } else if (row == 2) {
-                    component.setBackground(Color.ORANGE);
-                } else {
-                    component.setBackground(Color.WHITE);
-                }
-
-                return component;
-    
-            }
-        };
-
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Player Name");
-        model.addColumn("Score");
-
-        // ... (Rest of the code to load and sort leaderboard data)
-
-        leaderboardTable.setModel(model);
-
-        
-        leaderboardTable.setShowGrid(true);
-
-        
-        leaderboardTable.setRowSelectionAllowed(true);
-
-        
-        leaderboardTable.setCellSelectionEnabled(true);
-        leaderboardTable.setIntercellSpacing(new Dimension(0, 0));
-
-
-
-
-        List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
-
-        // Read scores from the file and add them to the list
-        try (BufferedReader reader = new BufferedReader(new FileReader("leaderboard.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 2) {
-                    String playerName = parts[0];
-                    int score = Integer.parseInt(parts[1]);
-                    leaderboardEntries.add(new LeaderboardEntry(playerName, score));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Sort the leaderboard entries by score in descending order
-        leaderboardEntries.sort(Comparator.comparing(LeaderboardEntry::getScore).reversed());
-
-        // Add sorted entries to the table
-        for (LeaderboardEntry entry : leaderboardEntries) {
-            model.addRow(new Object[]{entry.getPlayerName(), entry.getScore()});
-        }
-
-        leaderboardTable.setModel(model);
-
-        JScrollPane scrollPane = new JScrollPane(leaderboardTable);
-        leaderboardPanel.add(scrollPane);
-
-        leaderboardFrame.setVisible(true);
-    }
-
-    
-      
-    
+    private static CombinationsUse combinationsSelected;    
 
     /**
      * Constr.
      */
-    public GameBoard() {
-        
+    public GameBoard() { 
         dices = new Dice[5];
         player = new Player();
         rolls = new DiceRolling();
@@ -160,18 +54,7 @@ public class GameBoard extends JFrame {
      * Run.
      */
     public void run() {
-        playerName = JOptionPane.showInputDialog("Enter your name");
-        if (playerName == null || playerName.isEmpty()) {
-            System.exit(0);  // Exit if the player didn't provide a name
-        }
-        if (player == null) {
-            player = new Player();
-        }
-        player.setName(playerName);
-
-        // Create a new Player object or update the existing one with the new name
-      
-
+        setPlayerName(JOptionPane.showInputDialog("Enter your name"));
         
         JFrame frame = new JFrame("Main Menu");
         frame.setSize(550, 550);
@@ -288,6 +171,12 @@ public class GameBoard extends JFrame {
                         );
                         gameOver.setVisible(true);
                         rollDices.setEnabled(false);
+
+                        // Save the player's name and score in the leaderboard
+                        savePlayerScore(player.getName(), player.getTotalScore());
+                
+                        // Display the leaderboard
+                        displayLeaderboard();
                     }
                 }
             });
@@ -496,14 +385,10 @@ public class GameBoard extends JFrame {
         newGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Store the player's score in a variable before resetting it
-                int currentPlayerScore = player.getTotalScore();
-        
                 // Reset the game
                 rolls.resetRolls();
                 remainingRollsLabel.setText("You have " + rolls.getRemainingRolls() 
                     + " remaining rolls");
-                player.setName(playerName);
         
                 // Reset the player's total score to 0
                 player.resetScore();
@@ -524,14 +409,112 @@ public class GameBoard extends JFrame {
                 combinationsSelected.resetCombinations();
         
                 gameOver.setVisible(false);
-        
-                // Save the player's name and score in the leaderboard
-                savePlayerScore(playerName, currentPlayerScore);
-        
-                // Display the leaderboard
-                displayLeaderboard();
             }
         });
         
+    }
+
+    /**
+     * Set player's name.
+     * @param name - name
+     */
+    void setPlayerName(String name) {
+        if (name == null || name.isEmpty()) {
+            System.exit(0);
+        }
+        player.setName(name);
+    }
+
+    /**
+     * Save player's score.
+     */
+    public void savePlayerScore(String playerName, int score) {
+        try (BufferedWriter writer = 
+            new BufferedWriter(new FileWriter("leaderboard.txt", true))
+        ) {
+            writer.write(playerName + "," + score);
+            writer.newLine();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Display leaderboard.
+     */
+    public void displayLeaderboard() {
+        JFrame leaderboardFrame = new JFrame("Leaderboard");
+        leaderboardFrame.setSize(400, 300);
+        leaderboardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel leaderboardPanel = new JPanel();
+        leaderboardFrame.getContentPane().add(leaderboardPanel);
+
+        // Create a table to display the leaderboard
+        JTable leaderboardTable = new JTable() {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component component = super.prepareRenderer(renderer, row, column);
+
+                // Customize the font and foreground color
+                component.setFont(new Font("Arial", Font.PLAIN, 14));
+                component.setForeground(Color.BLACK);
+                
+                if (row == 0) {
+                    component.setBackground(Color.YELLOW);
+                } else if (row == 1) {
+                    component.setBackground(Color.LIGHT_GRAY);
+                } else if (row == 2) {
+                    component.setBackground(Color.ORANGE);
+                } else {
+                    component.setBackground(Color.WHITE);
+                }
+
+                return component;
+            }
+        };
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Player Name");
+        model.addColumn("Score");
+
+        leaderboardTable.setModel(model);
+        leaderboardTable.setShowGrid(true);
+        leaderboardTable.setRowSelectionAllowed(true);
+        leaderboardTable.setCellSelectionEnabled(true);
+        leaderboardTable.setIntercellSpacing(new Dimension(0, 0));
+
+        List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
+
+        // Read scores from the file and add them to the list
+        try (BufferedReader reader = new BufferedReader(new FileReader("leaderboard.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    String playerName = parts[0];
+                    int score = Integer.parseInt(parts[1]);
+                    leaderboardEntries.add(new LeaderboardEntry(playerName, score));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Sort the leaderboard entries by score in descending order
+        leaderboardEntries.sort(Comparator.comparing(LeaderboardEntry::getScore).reversed());
+
+        // Add sorted entries to the table
+        for (LeaderboardEntry entry : leaderboardEntries) {
+            model.addRow(new Object[]{entry.getPlayerName(), entry.getScore()});
+        }
+
+        leaderboardTable.setModel(model);
+
+        JScrollPane scrollPane = new JScrollPane(leaderboardTable);
+        leaderboardPanel.add(scrollPane);
+
+        leaderboardFrame.setVisible(true);
     }
 }

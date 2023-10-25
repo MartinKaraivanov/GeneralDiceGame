@@ -7,7 +7,7 @@ import java.util.Random;
  * Dice class.
  */
 public class Dice {
-    private  int value;
+    private int value;
     private Random random;
 
     /**
@@ -24,7 +24,5 @@ public class Dice {
 
     public int getValue() {
         return value;
-    }
-   
-      
+    } 
 }

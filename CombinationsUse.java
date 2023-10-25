@@ -40,7 +40,7 @@ public class CombinationsUse {
      * Reset function.
      */
     public void resetCombinations() {
-        numberOfUsedComb = 15;
+        numberOfUsedComb = 0;
         for (int i = 0; i < 15; i++) {
             combinationUsed[i] = false;
         }
