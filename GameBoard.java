@@ -53,7 +53,7 @@ public class GameBoard extends JFrame {
     /**
      * Run.
      */
-    public void run() {
+    public void runGame() {
         setPlayerName(JOptionPane.showInputDialog("Enter your name"));
         
         JFrame frame = new JFrame("Main Menu");
