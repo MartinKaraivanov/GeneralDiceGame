@@ -1,5 +1,6 @@
 package GeneralDiceGame;
 
+
 import javax.swing.SwingUtilities;
 
 /**
