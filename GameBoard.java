@@ -97,11 +97,12 @@ public class GameBoard extends JFrame {
 
         JButton[] diceButtons = new JButton[5];
         for (int i = 0; i < 5; i++) {
-            diceButtons[i] = new JButton();
-            diceButtons[i].setHorizontalAlignment(SwingConstants.CENTER);
+            diceButtons[i] = ImageService.loadImage("Images/dice_side0.png");
+            diceButtons[i].setBackground(Color.WHITE);
+            diceButtons[i].setOpaque(true);
             diceButtons[i].setEnabled(false);
             diceButtons[i].setFocusPainted(false);
-            diceButtons[i].setBounds(221 + i * 56, 77, 46, 46);
+            diceButtons[i].setBounds(225 + i * 60, 75, 50, 50);
             panel.add(diceButtons[i]);
             
             final int currentDice = i;
@@ -109,8 +110,8 @@ public class GameBoard extends JFrame {
             diceButtons[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    ImageService.updateImage(diceButtons[currentDice], "Images/dice_side0.png");
                     diceButtons[currentDice].setEnabled(false);
-                    diceButtons[currentDice].setText(null);
                     rollDices.setEnabled(true);
                 }
             });
@@ -151,9 +152,9 @@ public class GameBoard extends JFrame {
                     totalLabel.setText("Total score: " + player.getTotalScore());
                     
                     for (int j = 0; j < 5; j++) {
-                        diceButtons[j].setText(null);
                         diceButtons[j].setEnabled(false);
                         diceButtons[j].setFocusPainted(false);
+                        ImageService.updateImage(diceButtons[j], "Images/dice_side0.png");
                     }
 
                     rollDices.setEnabled(true);
@@ -194,9 +195,12 @@ public class GameBoard extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 for (int i = 0; i < 5; i++) {
                     if (!diceButtons[i].isEnabled()) {
-                        dices[i].roll();
                         diceButtons[i].setEnabled(true);
-                        diceButtons[i].setText(Integer.toString(dices[i].getValue()));
+                        diceButtons[i].setFocusPainted(false);
+                        dices[i].roll();
+                        ImageService.updateImage(
+                            diceButtons[i], "Images/dice_side" + dices[i].getValue() + ".png"
+                        );
                     }
                 }
 
@@ -396,9 +400,9 @@ public class GameBoard extends JFrame {
                 totalLabel.setText("Total score: " + player.getTotalScore());
         
                 for (int i = 0; i < 5; i++) {
-                    diceButtons[i].setText(null);
                     diceButtons[i].setEnabled(false);
                     diceButtons[i].setFocusPainted(false);
+                    ImageService.updateImage(diceButtons[i], "Images/dice_side0.png");
                 }
                 rollDices.setEnabled(true);
         
