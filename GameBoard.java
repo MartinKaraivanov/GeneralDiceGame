@@ -125,6 +125,7 @@ public class GameBoard extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     ImageService.updateImage(diceButtons[currentDice], "Images/dice_side0.png");
                     diceButtons[currentDice].setEnabled(false);
+                    dices[currentDice].unuse();
                     rollDices.setEnabled(true);
                 }
             });
@@ -167,6 +168,7 @@ public class GameBoard extends JFrame {
                     for (int j = 0; j < 5; j++) {
                         diceButtons[j].setEnabled(false);
                         diceButtons[j].setFocusPainted(false);
+                        dices[j].unuse();
                         ImageService.updateImage(diceButtons[j], "Images/dice_side0.png");
                     }
 
@@ -211,14 +213,20 @@ public class GameBoard extends JFrame {
                 protected Void doInBackground() {
                     exit.setEnabled(false);
                     newGame.setEnabled(false);
+                    rollDices.setEnabled(false);
                     for (int i = 0; i < 15; i++) {
                         combinationButtons[i].setEnabled(false);
+                    }
+                    for (int i = 0; i < 5; i++) {
+                        if (dices[i].getUsed()) {
+                            diceButtons[i].setEnabled(false);
+                        }
                     }
 
                     long startTime = System.currentTimeMillis();
                     while ((System.currentTimeMillis() - startTime) / 1000F < 2) {
                         for (int i = 0; i < 5; i++) {
-                            if (!diceButtons[i].isEnabled()) {
+                            if (!dices[i].getUsed()) {
                                 dices[i].roll();
                                 ImageService.updateImage(
                                     diceButtons[i], 
@@ -235,10 +243,11 @@ public class GameBoard extends JFrame {
                     }
 
                     for (int i = 0; i < 5; i++) {
-                        if (!diceButtons[i].isEnabled()) {
+                        if (!dices[i].getUsed()) {
                             diceButtons[i].setEnabled(true);
                             diceButtons[i].setFocusPainted(false);
                             dices[i].roll();
+                            dices[i].use();
                             ImageService.updateImage(
                                 diceButtons[i], "Images/dice_side" + dices[i].getValue() + ".png"
                             );
@@ -421,6 +430,11 @@ public class GameBoard extends JFrame {
                             combinationButtons[i].setEnabled(true);
                         }
                     }
+                    if (rolls.getRemainingRolls() != 0) {
+                        for (int i = 0; i < 5; i++) {
+                            diceButtons[i].setEnabled(true);
+                        }
+                    }
 
                     return null;
                 }
@@ -444,6 +458,7 @@ public class GameBoard extends JFrame {
                 for (int i = 0; i < 5; i++) {
                     diceButtons[i].setEnabled(false);
                     diceButtons[i].setFocusPainted(false);
+                    dices[i].unuse();
                     ImageService.updateImage(diceButtons[i], "Images/dice_side0.png");
                 }
                 rollDices.setEnabled(true);
