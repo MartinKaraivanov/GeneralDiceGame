@@ -524,7 +524,9 @@ public class GameBoard extends JFrame {
      */
     public void displayLeaderboard() {
         JFrame leaderboardFrame = new JFrame("Leaderboard");
-        leaderboardFrame.setSize(400, 300);
+        leaderboardFrame.setSize(450, 300);
+        leaderboardFrame.setResizable(false);
+        leaderboardFrame.setLocationRelativeTo(null);
         leaderboardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel leaderboardPanel = new JPanel();
@@ -559,6 +561,16 @@ public class GameBoard extends JFrame {
         model.addColumn("Score");
 
         leaderboardTable.setModel(model);
+        leaderboardTable.setPreferredScrollableViewportSize(new Dimension(400, 300));
+        int rowHeight = 50; // Adjust the row height as needed
+        leaderboardTable.setRowHeight(rowHeight);
+        int columnWidth = 200; // Adjust the column width as needed
+        for (int i = 0; i < leaderboardTable.getColumnCount(); i++) {
+            leaderboardTable.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
+        }
+
+
+        leaderboardTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         leaderboardTable.setShowGrid(true);
         leaderboardTable.setRowSelectionAllowed(true);
         leaderboardTable.setCellSelectionEnabled(true);
