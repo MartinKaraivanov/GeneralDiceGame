@@ -63,9 +63,10 @@ public class GameBoard extends JFrame {
         frame.setResizable(false);
         frame.setVisible(true);
 
-        JPanel panel = new JPanel();
+        BackgroundPanel panel = new BackgroundPanel("Images/board.png");
         panel.setLayout(null);
-        frame.getContentPane().add(panel);
+        panel.setBounds(0, 0, 550, 550);
+        frame.add(panel);
 
         JLabel title = new JLabel("General Dice Game", SwingConstants.CENTER);
         title.setBounds(10, 10, 500, 50);
