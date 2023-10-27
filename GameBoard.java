@@ -216,6 +216,9 @@ public class GameBoard extends JFrame {
                     rollDices.setEnabled(false);
                     for (int i = 0; i < 15; i++) {
                         combinationButtons[i].setEnabled(false);
+                        if (!combinationsSelected.isCombinationUsed(i)) {
+                            combinationButtons[i].setText(null);
+                        }
                     }
                     for (int i = 0; i < 5; i++) {
                         if (dices[i].getUsed()) {
