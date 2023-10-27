@@ -35,7 +35,9 @@ public class GameBoard extends JFrame {
     private static Dice[] dices;
     private static Player player;
     private static DiceRolling rolls;
-    private static CombinationsUse combinationsSelected;    
+    private static CombinationsUse combinationsSelected;  
+    private JFrame currentLeaderboardFrame;
+  
 
     /**
      * Constr.
@@ -458,6 +460,10 @@ public class GameBoard extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Reset the game
+                if (currentLeaderboardFrame != null) {
+                    currentLeaderboardFrame.dispose();
+                }
+                currentLeaderboardFrame = null;
                 rolls.resetRolls();
                 remainingRollsLabel.setText("You have " + rolls.getRemainingRolls() 
                     + " remaining rolls");
@@ -523,6 +529,9 @@ public class GameBoard extends JFrame {
      * Display leaderboard.
      */
     public void displayLeaderboard() {
+        if (currentLeaderboardFrame != null) {
+            currentLeaderboardFrame.dispose();
+        }
         JFrame leaderboardFrame = new JFrame("Leaderboard");
         leaderboardFrame.setSize(450, 300);
         leaderboardFrame.setResizable(false);
@@ -605,7 +614,7 @@ public class GameBoard extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane(leaderboardTable);
         leaderboardPanel.add(scrollPane);
-
+        currentLeaderboardFrame = leaderboardFrame;
         leaderboardFrame.setVisible(true);
     }
 }
