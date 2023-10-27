@@ -94,18 +94,24 @@ public class GameBoard extends JFrame {
         exit.setBounds(277, 367, 158, 67);
         exit.setHorizontalAlignment(SwingConstants.CENTER);
         exit.setFocusPainted(false);
+        exit.setBackground(Color.RED);
+        exit.setOpaque(true);
         panel.add(exit);
     
         JButton newGame = new JButton("New Game");
         newGame.setBounds(277, 262, 158, 67);
         newGame.setHorizontalAlignment(JTextField.CENTER);
         newGame.setFocusPainted(false);
+        newGame.setBackground(Color.LIGHT_GRAY);
+        newGame.setOpaque(true);
         panel.add(newGame);
 
         JButton rollDices = new JButton("Roll");
         rollDices.setBounds(277, 174, 158, 44);
         rollDices.setHorizontalAlignment(JTextField.CENTER);
         rollDices.setFocusPainted(false);
+        rollDices.setBackground(Color.YELLOW);
+        rollDices.setOpaque(true);
         panel.add(rollDices);
 
         JButton[] diceButtons = new JButton[5];
@@ -144,6 +150,8 @@ public class GameBoard extends JFrame {
             combinationButtons[i].setBounds(125, 80 + i * 20, 74, 19);
             combinationButtons[i].setFocusPainted(false);
             combinationButtons[i].setEnabled(false);
+            combinationButtons[i].setBackground(Color.WHITE);
+            combinationButtons[i].setOpaque(true);
             panel.add(combinationButtons[i]);
 
             final int currentCombination = i;
