@@ -75,3 +75,4 @@ The project consists of several classes, each responsible for specific aspects o
 - The leaderboard displays the top scores achieved by players.
 - The repository is given in the zip file, in the HIDDEN folder named .git.
 - Link to the GitHub repository: https://github.com/MartinKaraivanov/GeneralDiceGame.git
+- The Product Backlog is in the Product_Backlog_General_Dice_Game.md file.
