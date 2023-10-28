@@ -31,4 +31,3 @@ class BackgroundPanel extends JPanel {
         }
     }
 }
-
