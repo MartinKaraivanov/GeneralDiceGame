@@ -73,5 +73,5 @@ The project consists of several classes, each responsible for specific aspects o
 - The game includes various combinations such as pairs, triples, full house, and more.
 - Player scores are saved in a "leaderboard.txt" file.
 - The leaderboard displays the top scores achieved by players.
-- The repository is given in the zip file, in the .git folder.
+- The repository is given in the zip file, in the HIDDEN folder named .git.
 - Link to the GitHub repository: https://github.com/MartinKaraivanov/GeneralDiceGame.git
